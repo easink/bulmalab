@@ -1,0 +1,10 @@
+/* This file is for your main application css. */
+
+@charset "utf-8";
+/* @import "./phoenix.css"; */
+/* @import "../../deps/phoenix_live_view/assets/css/live_view.css"; */
+
+@import "../node_modules/bulma/css/bulma.min.css";
+@import "../node_modules/@fortawesome/fontawesome-free/css/solid.min.css";
+
+@import "range.css";

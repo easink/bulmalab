@@ -1,0 +1,14 @@
+<%= live_render(@conn, BulmalabWeb.IndexLive) %>
+<section class="hero is-primary">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        <%= gettext "Welcome to %{name}!", name: "Phoenix" %>
+      </h1>
+      <p>
+        A productive web framework that<br/>does not compromise speed or maintainability.
+      </p>
+    </div>
+  </div>
+</section>
+
