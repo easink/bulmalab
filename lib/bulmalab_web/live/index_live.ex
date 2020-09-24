@@ -46,7 +46,7 @@ defmodule BulmalabWeb.IndexLive do
   # end
 
   def handle_event(_event, _params, socket) do
-    IO.inspect(binding(), label: "UNKOWN LIVE EVENT")
+    IO.inspect(binding(), label: "UNKNOWN LIVE EVENT")
     {:noreply, socket}
   end
 

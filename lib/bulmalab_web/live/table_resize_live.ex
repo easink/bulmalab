@@ -9,7 +9,7 @@ defmodule BulmalabWeb.TableResizeLiveComponent do
     table_classes = assigns.table_classes |> to_html_class_names()
 
     ~L"""
-    <table class="table <%= table_classes %>" id="table-<%= @id %>"<>
+    <table class="table <%= table_classes %>" id="table-<%= @id %>">
     <thead>
       <%= header(@table, assigns) %>
     </thead>
@@ -28,7 +28,8 @@ defmodule BulmalabWeb.TableResizeLiveComponent do
       table_classes: [:is_hoverable, :is_narrow, :is_bordered],
       sort_by: nil,
       order: :asc,
-      selected: nil
+      selected: nil,
+      widths: []
     ]
 
     {:ok, assign(socket, init)}
@@ -40,13 +41,28 @@ defmodule BulmalabWeb.TableResizeLiveComponent do
     {:noreply, assign(socket, sort_by: sort_by, order: order)}
   end
 
-  def handle_event("select", %{"row-id" => row_id}, socket) do
+  def handle_event("select", %{"row-id" => row_id} = apa, socket) do
     IO.inspect(binding(), label: "TABLE SELECT", limit: :infinity)
     selected = unless socket.assigns.selected == row_id, do: row_id
 
     # entry = Enum.find(socket.table, fn entry ->
     send(self(), {:table, socket.assigns.id, selected})
     {:noreply, assign(socket, selected: selected)}
+  end
+
+  def handle_event("resize", %{"title" => title, "width" => width}, socket) do
+    IO.inspect(binding(), label: "TABLE COLUMN RESIZE", limit: :infinity)
+
+    widths = socket.assigns.widths
+    heads = headers(socket.assigns.table)
+
+    socket =
+      case Enum.find(heads, fn name -> Atom.to_string(name) == title end) do
+        nil -> socket
+        title -> assign(socket, widths: Keyword.put(widths, title, width))
+      end
+
+    {:noreply, socket}
   end
 
   def handle_event(_event, _params, socket) do
@@ -75,48 +91,56 @@ defmodule BulmalabWeb.TableResizeLiveComponent do
 
     attrs = [
       style: "position: relative",
+      class: "unselectable",
+      title: title,
       phx_click: "sort",
       phx_value_sort_by: title,
       phx_target: "#table-#{assigns.id}"
     ]
 
-    # attrs =
-    #   if title == assigns.sort_by,
-    #     do: [{:bgcolor, "#E0E0E0"} | attrs],
-    #     else: attrs
+    attrs =
+      assigns.widths
+      |> Keyword.get(title)
+      |> maybe_add_width(attrs)
 
     content_tag(:th, attrs) do
       if title == assigns.sort_by,
-        do: title_camel |> title_sort(assigns.order),
-        else: [title_camel, resize_elem()]
-
-      # Routes.live_path(
-      # live_link(title,
-      #   to:
-      #     BulmalabWeb.Router.Helpers.page_path(
-      #       BulmalabWeb.Endpoint,
-      #       :index,
-      #       %{sort_by: title}
-      #     )
-      # )
-
-      # content_tag(:strong, String.capitalize(title), title: title)
+        do: [title_camel |> show_sort(assigns.order), resize_elem(title, assigns.id)],
+        else: [title_camel, resize_elem(title, assigns.id)]
     end
   end
 
-  defp resize_elem() do
+  defp resize_elem(title, id) do
     # <div style="top: 0px; right: 0px; width: 5px; position: absolute; cursor: col-resize; user-select: none; height: 87px;"></div>
     # style="position: absolute; top: 0; right: 0; bottom: 0; background: black; opacity: 0; width: 5px; cursor: col-resize;"
-    style =
-      "position: absolute; top: 0; right: 0; bottom: 0; background: black; opacity: 0; width: 5px; cursor: col-resize;"
+    style = """
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: black;
+    opacity: 0;
+    width: 5px;
+    cursor: col-resize;
+    """
 
-    content_tag(:span, "", style: style)
+    # content_tag(:span, "", style: style, id: "#{id}-#{title}", phx_hook: "Table")
+    attrs = [
+      style: style,
+      # "x-on:mousedown": "mousedown = true; xpos = $event.clientX; console.log($event)",
+      # "x-on:mousemove": "if (mousedown === true) { console.log(xpos - $event.clientX) }",
+      # "x-on:mouseup": "mousedown = false; console.log('up')"
+      id: "#{id}-#{title}",
+      phx_hook: "Table"
+    ]
+
+    content_tag(:span, "", attrs)
   end
 
-  defp title_sort(title, :asc),
+  defp show_sort(title, :asc),
     do: [title, @arrow_down]
 
-  defp title_sort(title, :desc),
+  defp show_sort(title, :desc),
     do: [title, @arrow_up]
 
   # do: [String.upcase(title), <<0xF0, 0xD7>>]
@@ -142,12 +166,14 @@ defmodule BulmalabWeb.TableResizeLiveComponent do
   defp row(row, headers, assigns) do
     prim_key = List.first(headers)
     row_id = Map.get(row, prim_key)
-    attrs = [phx_click: "select", phx_value_row_id: row_id, phx_target: "#table-#{assigns.id}"]
 
     attrs =
-      if assigns.selected == row_id,
-        do: [{:class, "is-selected"} | attrs],
-        else: attrs
+      [
+        phx_click: "select",
+        phx_value_row_id: row_id,
+        phx_target: "#table-#{assigns.id}"
+      ]
+      |> add_selected(assigns.selected, row_id)
 
     content_tag(:tr, attrs) do
       for column <- headers do
@@ -174,5 +200,18 @@ defmodule BulmalabWeb.TableResizeLiveComponent do
     |> Enum.map(&to_string/1)
     |> Enum.map(&String.replace(&1, "_", "-"))
     |> Enum.join(" ")
+  end
+
+  defp add_selected(attrs, selected_row, row_id) do
+    if selected_row == row_id,
+      do: [{:class, "is-selected"} | attrs],
+      else: attrs
+  end
+
+  defp maybe_add_width(nil, attrs), do: attrs
+
+  defp maybe_add_width(width, attrs) do
+    width = max(width, 10)
+    Keyword.put(attrs, :width, "#{width}px")
   end
 end
