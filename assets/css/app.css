@@ -6,6 +6,7 @@
 
 @import "../node_modules/bulma/css/bulma.min.css";
 @import "../node_modules/@fortawesome/fontawesome-free/css/solid.min.css";
+@import "../node_modules/fomantic-ui-css/semantic.css";
 
 @import "range.css";
 

@@ -8,6 +8,10 @@ defmodule BulmalabWeb.IndexLive do
       SELECTED: <%= if @dropdown_selected, do: @dropdown_selected %>
       SELECTED: <%= if @table_selected, do: @table_selected %>
     <br>
+    <h1>Dropdown Foo:</h1>
+      <%= live_component(@socket, BulmalabWeb.DropdownFooLiveComponent, id: @dropdown_foo_id, dropdown: @dropdown_foo) %>
+      SELECTED: <%= if @dropdown_foo_selected, do: @dropdown_foo_selected %>
+    <br>
     <h1>Range:</h1>
       <%= live_component(@socket, BulmalabWeb.LiveRangeComponent, id: :unique_range, value: @range_value, min: 0, max: 100) %>
     <br>
@@ -27,6 +31,7 @@ defmodule BulmalabWeb.IndexLive do
     countries = Bulmalab.Countries.list()
     dropdown = ["apa", "banan"]
     dropdown_id = :some_dropdown
+    dropdown_foo_id = :some_dropdown_foo
 
     {:ok,
      assign(socket,
@@ -34,6 +39,9 @@ defmodule BulmalabWeb.IndexLive do
        dropdown_id: dropdown_id,
        dropdown: dropdown,
        dropdown_selected: nil,
+       dropdown_foo_id: dropdown_foo_id,
+       dropdown_foo: dropdown,
+       dropdown_foo_selected: nil,
        modal_selected: nil,
        table_selected: nil,
        range_value: 50

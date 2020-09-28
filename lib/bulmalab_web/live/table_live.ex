@@ -25,7 +25,8 @@ defmodule BulmalabWeb.TableLiveComponent do
   def mount(socket) do
     # IO.inspect(binding(), label: :mount)
     init = [
-      table_classes: [:is_hoverable, :is_narrow, :is_bordered],
+      # table_classes: [:is_hoverable, :is_narrow, :is_bordered],
+      table_classes: [:ui, :selectable, :celled, :striped, :table],
       sort_by: nil,
       order: :asc,
       selected: nil

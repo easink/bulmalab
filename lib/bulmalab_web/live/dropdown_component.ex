@@ -5,9 +5,9 @@ defmodule BulmalabWeb.DropdownLiveComponent do
   def render(assigns) do
     # IO.inspect(assigns, label: :DDDD, limit: :infinity)
     ~L"""
-    <div class="dropdown <%= if @active, do: "is-active" %>" id="dropdown-<%= @id %>">
+    <div class="dropdown <%= if @active, do: "is-active" %>">
       <div class="dropdown-trigger">
-        <button class="button" style="z-index: 2;" aria-haspopup="true" aria-controls="dropdown-menu3" phx-click="activate" phx-target="#dropdown-<%= @id %>">
+        <button class="button" style="z-index: 2;" aria-haspopup="true" aria-controls="dropdown-menu3" phx-click="activate" phx-target="<%= @myself %>">
           <span>Click me</span>
           <span class="icon is-small">
             <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -17,7 +17,7 @@ defmodule BulmalabWeb.DropdownLiveComponent do
       <div class="dropdown-menu" id="dropdown-menu3" role="menu">
         <div class="dropdown-content">
           <%= for item <- @dropdown do %>
-          <a href="#" class="dropdown-item" phx-click="select", phx-value-item="<%= item %>" phx-target="#dropdown-<%= @id %>">
+          <a href="#" class="dropdown-item" phx-click="select", phx-value-item="<%= item %>" phx-target="<%= @myself %>">
             <%= item %>
           </a>
           <% end %>
@@ -25,7 +25,7 @@ defmodule BulmalabWeb.DropdownLiveComponent do
       </div>
       <%= if @active do %>
       <!-- click layer -->
-      <div style="opacity: 1!important; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;" phx-click="deactivate" phx-target="#dropdown-<%= @id %>"></div>
+      <div style="opacity: 1!important; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;" phx-click="deactivate" phx-target="<%= @myself %>"></div>
       <% end %>
     </div>
     """
