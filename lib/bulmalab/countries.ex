@@ -4,13 +4,12 @@ defmodule Bulmalab.Countries do
 
   # import Ecto.Changeset
 
-  @countries \
-     Bulmalab.Data.contries()
-     |> Enum.map(fn country ->
-       %Country{}
-       |> Country.changeset(country)
-       |> Ecto.Changeset.apply_changes()
-     end)
+  @countries Bulmalab.Data.contries()
+             |> Enum.map(fn country ->
+               %Country{}
+               |> Country.changeset(country)
+               |> Ecto.Changeset.apply_changes()
+             end)
 
   @spec list() :: [Country.t()]
   def list() do

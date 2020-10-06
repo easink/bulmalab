@@ -12,6 +12,10 @@ defmodule BulmalabWeb.IndexLive do
       <%= live_component(@socket, BulmalabWeb.DropdownFooLiveComponent, id: @dropdown_foo_id, dropdown: @dropdown_foo) %>
       SELECTED: <%= if @dropdown_foo_selected, do: @dropdown_foo_selected %>
     <br>
+    <h1>Dropdown Foo Alpine:</h1>
+      <%= live_component(@socket, BulmalabWeb.DropdownFooAlpineLiveComponent, id: @dropdown_foo_alpine_id, dropdown: @dropdown_foo_alpine) %>
+      SELECTED: <%= if @dropdown_foo_alpine_selected, do: @dropdown_foo_alpine_selected %>
+    <br>
     <h1>Range:</h1>
       <%= live_component(@socket, BulmalabWeb.LiveRangeComponent, id: :unique_range, value: @range_value, min: 0, max: 100) %>
     <br>
@@ -32,6 +36,7 @@ defmodule BulmalabWeb.IndexLive do
     dropdown = ["apa", "banan"]
     dropdown_id = :some_dropdown
     dropdown_foo_id = :some_dropdown_foo
+    dropdown_foo_alpine_id = :some_dropdown_foo_alpine
 
     {:ok,
      assign(socket,
@@ -42,6 +47,9 @@ defmodule BulmalabWeb.IndexLive do
        dropdown_foo_id: dropdown_foo_id,
        dropdown_foo: dropdown,
        dropdown_foo_selected: nil,
+       dropdown_foo_alpine_id: dropdown_foo_alpine_id,
+       dropdown_foo_alpine: dropdown,
+       dropdown_foo_alpine_selected: nil,
        modal_selected: nil,
        table_selected: nil,
        range_value: 50

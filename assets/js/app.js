@@ -12,7 +12,7 @@ import css from "../css/app.css"
 import "phoenix_html"
 import {Socket} from "phoenix"
 import LiveSocket from "phoenix_live_view"
-// import 'alpinejs'
+import 'alpinejs'
 
 let Hooks = {}
 Hooks.Table = {
@@ -67,7 +67,13 @@ Hooks.Table = {
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}});
+let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken},
+  dom: {
+    onBeforeElUpdated(from, to){
+      if(from.__x){ window.Alpine.clone(from.__x, to) }
+    }
+  }
+});
 // , dom: {
 //   onBeforeElUpdated(from, to) {
 //     if (from.__x) { window.Alpine.clone(from.__x, to) }
