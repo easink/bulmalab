@@ -25,7 +25,7 @@ Hooks.Table = {
     const debounce_interval = 20;
     let last = Date.now() - debounce_interval;
 
-    this.el.addEventListener("mousedown", function(e) {
+    this.el.addEventListener("mousedown", (e) => {
       console.log("mouse down");
       console.log(e);
       const prevX = e.clientX;
