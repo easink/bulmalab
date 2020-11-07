@@ -19,3 +19,7 @@
     user-select: none;
 }
 
+.animating.slide.down {
+    /* display block !important; */
+    animation-duration: 2000ms;
+}

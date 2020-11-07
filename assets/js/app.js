@@ -28,6 +28,8 @@ Hooks.Table = {
     this.el.addEventListener("mousedown", (e) => {
       console.log("mouse down");
       console.log(e);
+      e.stopPropagation();
+
       const prevX = e.clientX;
       const width = el.parentElement.offsetWidth;
 
@@ -37,28 +39,36 @@ Hooks.Table = {
       function mousemove(e) {
 
         console.log("mouse move");
+        e.stopPropagation();
         let diffX = e.clientX - prevX;
-        const title = el.parentElement.title;
-        const target = el.parentElement.getAttribute("phx-target");
-        // el.parentElement.setAttribute("width", width + diffX + "px");
 
         const now = Date.now();
         if ((now - last) > debounce_interval) {
-          my.pushEventTo(target, "resize", {
-            title: title,
-            width: width + diffX
-          });
+          el.parentElement.setAttribute("width", width + diffX + "px");
 
           last = now;
         }
 
       }
 
-      function mouseup() {
+      function mouseup(e) {
         console.log("mouse up");
+        e.stopPropagation();
+
+        const title = el.parentElement.title;
+        const target = el.parentElement.getAttribute("phx-target");
+        const width = el.parentElement.offsetWidth;
+
+        my.pushEventTo(target, "resize", {
+            title: title,
+            width: width
+        });
+
         // this.mouse_down = false;
         window.removeEventListener("mousemove", mousemove);
         window.removeEventListener("mouseup", mouseup);
+
+        console.log("mouse up done");
       }
 
     });

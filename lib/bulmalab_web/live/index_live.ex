@@ -19,6 +19,9 @@ defmodule BulmalabWeb.IndexLive do
     <h1>Range:</h1>
       <%= live_component(@socket, BulmalabWeb.LiveRangeComponent, id: :unique_range, value: @range_value, min: 0, max: 100) %>
     <br>
+    <h1>Table Resize Components:</h1>
+      <%= live_component(@socket, BulmalabWeb.TableResizeComponentsLiveComponent, id: :unique_table_resize_components, table: @table) %>
+    <br>
     <h1>Table Resize:</h1>
       <%= live_component(@socket, BulmalabWeb.TableResizeLiveComponent, id: :unique_table_resizes, table: @table) %>
     <br>
