@@ -24,34 +24,44 @@ defmodule BulmalabWeb.TableResizeComponentsLiveComponent do
     @impl true
     def render(assigns) do
       ~L"""
-      <%= table_row(@row, @headers, @table_assigns) %>
+      <tr phx-click="select"
+          phx-value-row-id="<%= @id %>"
+          phx-target="#table-<%= @table_assigns.id %>"
+          <%= if @table_assigns.selected_row == @id do %>
+          class="is-selected"
+          <% end %>
+      >
+      <%= for column <- @headers do %>
+        <td><%= Map.get(@row, column, "") %></td>
+      <% end %>
+      </tr>
       """
     end
 
-    defp table_row(row, headers, assigns) do
-      prim_key = List.first(headers)
-      row_id = Map.get(row, prim_key)
+    # defp table_row(row, headers, assigns) do
+    #   prim_key = List.first(headers)
+    #   row_id = Map.get(row, prim_key)
 
-      attrs =
-        [
-          phx_click: "select",
-          phx_value_row_id: row_id,
-          phx_target: "#table-#{assigns.id}"
-        ]
-        |> add_selected(assigns.selected_row, row_id)
+    #   attrs =
+    #     [
+    #       phx_click: "select",
+    #       phx_value_row_id: row_id,
+    #       phx_target: "#table-#{assigns.id}"
+    #     ]
+    #     |> add_selected(assigns.selected_row, row_id)
 
-      content_tag(:tr, attrs) do
-        for column <- headers do
-          content_tag(:td, Map.get(row, column))
-        end
-      end
-    end
+    #   content_tag(:tr, attrs) do
+    #     for column <- headers do
+    #       content_tag(:td, Map.get(row, column))
+    #     end
+    #   end
+    # end
 
-    defp add_selected(attrs, selected_row, row_id) do
-      if selected_row == row_id,
-        do: [{:class, "is-selected"} | attrs],
-        else: attrs
-    end
+    # defp add_selected(attrs, selected_row, row_id) do
+    #   if selected_row == row_id,
+    #     do: [{:class, "is-selected"} | attrs],
+    #     else: attrs
+    # end
   end
 
   @impl true
