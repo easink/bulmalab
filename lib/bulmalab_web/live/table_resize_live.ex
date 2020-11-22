@@ -20,6 +20,7 @@ defmodule BulmalabWeb.TableResizeLiveComponent do
     </tfoot>
     </table>
     """
+    |> IO.inspect(label: :TABLE)
   end
 
   def mount(socket) do

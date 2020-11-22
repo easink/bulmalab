@@ -8,6 +8,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
     "alpinejs": "^2.7.0",
+    "file-loader": "^6.2.0",
     "fomantic-ui-css": "^2.8.7",
     "node-sass": "^4.14.1",
     "phoenix": "file:../deps/phoenix",

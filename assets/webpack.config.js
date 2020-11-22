@@ -40,6 +40,14 @@ module.exports = (env, options) => ({
         test: /\.svg$/,
         loader: 'svg-inline-loader'
       },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
       { test: /\.(ttf|eot|woff|woff2)$/, loader: 'ignore-loader' }
     ]
   },
