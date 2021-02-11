@@ -28,6 +28,8 @@ defmodule BulmalabWeb.IndexLive do
     <h1>Table:</h1>
       <%= live_component(@socket, BulmalabWeb.TableLiveComponent, id: :unique, table: @table) %>
     <br>
+    <h1>Popup:</h1>
+    <div class="ui teal button" phx-hook="Popup" data-title="Using click events" data-content="Clicked popups will close if you click away, but not if you click inside the popup">Click Me</div>
     """
   end
 
